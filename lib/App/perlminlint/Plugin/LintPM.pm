@@ -8,24 +8,24 @@ use App::perlminlint::Plugin -as_base;
 sub priority {0}
 
 sub handle_test {
-  my ($app, $pack, $fn) = @_;
+  my ($plugin, $fn) = @_;
 
   $fn =~ m{\.pm\z}
     or return;
 
-  defined (my $modname = $app->apply_to($pack, find_module => $fn))
+  defined (my $modname = $plugin->find_module($fn))
     or die "Can't extract module name from $fn\n";
 
-  my @inc_opt = $app->inc_opt($fn, $modname);
+  my @inc_opt = $plugin->app->inc_opt($fn, $modname);
 
-  $app->system_perl(@inc_opt, -we => "require $modname")
+  $plugin->app->system_perl(@inc_opt, -we => "require $modname")
     and print "Module $modname is OK";
 }
 
 sub find_module {
-  my ($app, $pack, $fn) = @_;
+  my ($plugin, $fn) = @_;
 
-  local $_ = $app->read_file($fn);
+  local $_ = $plugin->app->read_file($fn);
 
   while (/(?:^|\n) [\ \t]*     (?# line beginning + space)
 	  package  [\n\ \t]+   (?# newline is allowed here)
@@ -35,7 +35,8 @@ sub find_module {
     my ($modname) = $1;
 
     # Tail of $modname should be equal to it's rootname.
-    if (((split /::/, $modname)[-1]) eq $app->rootname($app->basename($fn))) {
+    if (((split /::/, $modname)[-1])
+	eq $plugin->app->rootname($plugin->app->basename($fn))) {
       return $modname;
     }
   }

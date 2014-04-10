@@ -70,13 +70,32 @@ sub extend {
 }
 
 sub import {
-  my ($pack, @args) = @_;
-  if (@args and $args[0] =~ /^-(\w+)$/) {
-    my $method = "_import_$1";
-    $pack->$method(scalar caller, @args[1..$#args]);
-  } else {
-    require Exporter;
-    goto &Exporter::import;
+  $_[0]->dispatch_import(scalar caller, \@_);
+  require Exporter;
+  goto &Exporter::import;
+}
+
+sub dispatch_import {
+  my ($myPack, $callpack, $args) = @_;
+
+  #
+  # To allow falling back to Exporter::import,
+  # We need to keep original $_[0] in $args.
+  # That's why we scan $args->[1]
+  #
+  while (@$args >= 2
+	 and (ref $args->[1] or $args->[1] =~ /^-/)) {
+    my $argSpec = splice @$args, 1, 1;
+    my ($pragma, @args) = do {
+      if (ref $argSpec) {
+	@$argSpec
+      } else {
+	$argSpec =~ s/^-//;
+	$argSpec;
+      }
+    };
+    my $method = "_import_$pragma";
+    $myPack->$method($callpack, @args);
   }
 }
 
