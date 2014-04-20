@@ -59,7 +59,21 @@ sub handle_test {
 INSTALLATION
 --------------------
 
-(Not yet released to CPAN, please wait)
+Not yet released to CPAN. 
+If you have `~/bin` in your PATH, you can use this like following:
+
+```sh
+cd ~/bin
+git clone https://github.com/hkoba/app-perlminlint.git
+ln -s app-perlminlint/script/perlminlint .
+```
+
+Also, if you have `~/.emacs.d`, you can try this like following:
+
+```sh
+cd ~/.emacs.d
+ln -s ../app-perlminlint/elisp/perl-minlint.el
+```
 
 LICENSE
 --------------------

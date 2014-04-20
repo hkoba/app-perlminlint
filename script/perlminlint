@@ -5,7 +5,9 @@ use warnings FATAL => qw/all/;
 use FindBin;
 BEGIN {
   # To allow using plugins from PERL5LIB.
-  push @INC, grep {-d} "$FindBin::Bin/../lib"
+  push @INC, grep {-d}
+    ("$FindBin::Bin/../lib"
+     , "$FindBin::RealBin/../lib");
 }
 
 use App::perlminlint;

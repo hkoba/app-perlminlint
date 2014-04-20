@@ -11,6 +11,7 @@ use autodie;
 
 use App::perlminlint::Object -as_base;
 use fields qw/libs
+	      no_stderr
 	      _plugins/;
 
 require File::Basename;
@@ -21,6 +22,11 @@ sub run {
   my ($pack, $argv) = @_;
 
   my MY $app = $pack->new($pack->parse_argv($argv));
+
+  if ($app->{no_stderr}) {
+    close STDERR;
+    open STDERR, '>&STDOUT';
+  }
 
   my @res = $app->lint(@$argv);
   if (@res) {
@@ -146,11 +152,17 @@ sub parse_shbang {
 
 # XXX: Real new and options...
 
-sub new {
-  fields::new(shift);
+sub parse_argv {
+  my ($pack, $list) = @_;
+  my @opts;
+  while (@$list
+	 and my ($k, $v) = $list->[0] =~ /^--([-\w]+)(?:=(.*))?/) {
+    $k =~ s/-/_/g;
+    push @opts, $k => ($v // 1);
+    shift @$list;
+  }
+  @opts;
 }
-
-sub parse_argv {}
 
 1; # End of App::perlminlint
 
