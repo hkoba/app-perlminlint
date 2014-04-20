@@ -1,6 +1,8 @@
 App-perlminlint
 ====================
 
+`perlminlint` is a simple wrapper of `perl -wc`.
+
 SYNOPSIS
 --------------------
 
@@ -14,7 +16,7 @@ SYNOPSIS
 % perlminlint  cpanfile
 ```
 
-You can add plugin like followings:
+You can add plugins like followings:
 
 ```perl
 package App::perlminlint::Plugin::LintCPANfile;

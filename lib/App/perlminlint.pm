@@ -187,6 +187,9 @@ Also, to test modules, "perl -M$MOD -e0" is better than "perl -wc".
 C<perlminlint> wraps all such details so that you can just run C<perlminlint $yourfile> to test your script.
 
 
+=head1 SEE ALSO
+
+L<Module::Pluggable>
 
 =head1 COPYRIGHT
 
