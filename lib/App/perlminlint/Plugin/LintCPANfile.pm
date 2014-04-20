@@ -1,5 +1,4 @@
 package App::perlminlint::Plugin::LintCPANfile;
-# -*- coding: utf-8 -*-
 use strict;
 use warnings FATAL => qw/all/;
 
