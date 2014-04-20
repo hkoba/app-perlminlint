@@ -16,6 +16,18 @@ SYNOPSIS
 % perlminlint  cpanfile
 ```
 
+Editor Integration
+--------------------
+
+### Emacs
+
+Load `elisp/perl-minlint.el` and run `M-x perl-minlint-mode`.
+This will add `perl-minlint-run` to `after-save-hook`.
+Also, you can run minlint by hitting `<F5>` too.
+
+Plugin API
+--------------------
+
 You can add plugins like followings:
 
 ```perl

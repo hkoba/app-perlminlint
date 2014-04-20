@@ -23,6 +23,9 @@
   :global nil
   (let ((hook 'after-save-hook) (fn 'perl-minlint-run)
 	(buf (current-buffer)))
+    ;;
+    ;; XXX: Should I make after-save-hook buffer-local?
+    ;;
     (cond ((and (boundp 'mmm-temp-buffer-name)
 		(equal (buffer-name) mmm-temp-buffer-name))
 	   (message "skipping perl-minlint-mode for %s" buf)
@@ -30,19 +33,18 @@
 	  (perl-minlint-mode
 	   ;;; XXX: check whether we have perl-minlint or not.
 	   (message "enabling perl-minlint-mode for %s" buf)
-	   (add-hook hook fn nil nil)
-	   (make-variable-buffer-local 'perl-minlint-driver-path))
+	   (add-hook hook fn nil nil))
 	  (t
 	   (message "disabling perl-minlint-mode for %s" buf)
 	   (remove-hook hook fn nil)))))
-
-;; (if (member major-mode '(perl-mode cperl-mode))
 
 (defun perl-minlint-run ()
   "run perlminlint for current buffer"
   (interactive)
   (let ((buf (current-buffer)))
-    (perl-minlint-run-and-raise buf)))
+    ;;; XXX: Should care mmm case.
+    (if (member major-mode '(perl-mode cperl-mode))
+	(perl-minlint-run-and-raise buf))))
 
 (defun perl-minlint-run-and-raise (buffer)
   (perl-minlint-plist-bind (file line err rc)
