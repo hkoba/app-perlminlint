@@ -3,25 +3,22 @@ package App::perlminlint::Plugin::LintPL;
 use strict;
 use warnings FATAL => qw/all/;
 
-use App::perlminlint::Plugin -as_base;
+use App::perlminlint::Plugin -as_base
+  , [priority => 0], -is_generic;
 
-sub priority {0}
+sub handle_match {
+  (my MY $plugin, my $fn) = @_;
+  $fn =~ m{\.(pl|t)\z}
+    and $plugin;
+}
 
 sub handle_test {
   (my MY $plugin, my $fn) = @_;
 
-  $plugin->match($fn)
-    or return;
-
   my @opts = $plugin->gather_opts($fn);
 
-  $plugin->app->system_perl(@opts, -wc => $fn);
-}
-
-sub match {
-  (my MY $plugin, my $fn) = @_;
-  $fn =~ m{\.(pl|t)\z}i
-    or return;
+  $plugin->app->run_perl(@opts, -wc => $fn)
+    and ""; # Empty message.
 }
 
 sub gather_opts {

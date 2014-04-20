@@ -2,14 +2,13 @@ package App::perlminlint::Plugin::LintT;
 # -*- coding: utf-8 -*-
 use strict;
 use warnings FATAL => qw/all/;
-use App::perlminlint::Plugin::LintPL -as_base;
+use App::perlminlint::Plugin::LintPL
+  (-as_base, [priority => 1], [is_generic => 0]);
 
-sub priority {1}
-
-sub match {
+sub handle_match {
   (my MY $plugin, my $fn) = @_;
   $fn =~ m{\.t\z}i
-    or return;
+    and $plugin;
 }
 
 sub gather_opts {
@@ -22,7 +21,7 @@ sub gather_opts {
   #
   if (my ($basedir) = $fn =~ m{^(.*/|)t/}) {
     my $libdir = $basedir . "lib";
-    push @opts, "-I$libdir";
+    push @opts, "-I$libdir" if -d $libdir;
   }
 
   @opts;

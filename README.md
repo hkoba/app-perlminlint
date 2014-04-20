@@ -25,6 +25,9 @@ use App::perlminlint::Plugin -as_base;
 
 use Module::CPANfile;
 
+sub match {
+}
+
 sub handle_test {
   my ($plugin, $fn) = @_;
   $fn =~ m{\bcpanfile\z}i

@@ -7,12 +7,17 @@ use App::perlminlint::Plugin -as_base;
 
 use Module::CPANfile;
 
-sub handle_test {
+sub handle_match {
   my ($plugin, $fn) = @_;
   $fn =~ m{\bcpanfile\z}i
-    or return;
+    and $plugin;
+}
 
-  Module::CPANfile->load($fn);
+sub handle_test {
+  my ($plugin, $fn) = @_;
+
+  Module::CPANfile->load($fn)
+    and "CPANfile $fn is OK";
 }
 
 1;

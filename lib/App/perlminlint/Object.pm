@@ -45,6 +45,66 @@ sub configure {
   $self;
 }
 
+sub import {
+  $_[0]->dispatch_import(scalar caller, \@_);
+  require Exporter;
+  goto &Exporter::import;
+}
+
+sub dispatch_import {
+  my ($myPack, $callpack, $args) = @_;
+
+  #
+  # To allow falling back to Exporter::import,
+  # We need to keep original $_[0] in $args.
+  # That's why we scan $args->[1]
+  #
+  while (@$args >= 2
+	 and (ref $args->[1] or $args->[1] =~ /^-/)) {
+    my $argSpec = splice @$args, 1, 1;
+    my ($pragma, @args) = do {
+      if (ref $argSpec) {
+	@$argSpec
+      } else {
+	($argSpec =~ s/^-//
+	 ? ($argSpec => 1)
+	 : $argSpec);
+      }
+    };
+
+    if (my $sub = $myPack->can("_import_$pragma")) {
+      $sub->($myPack, $callpack, @args);
+    } else {
+      croak "Unknown pragma '$pragma' in $callpack";
+    }
+  }
+}
+
+sub _import_as_base {
+  my ($myPack, $callpack, @fields) = @_;
+
+  # Special case. -as_base is treated as [as_base => 1];
+  if (@fields == 1 and ($fields[0] // '') eq 1) {
+    pop @fields;
+  }
+
+  $myPack->extend($callpack, @fields);
+
+  $myPack->_declare_constant_in($callpack, MY => $callpack, 1);
+}
+
+sub _declare_constant_in {
+  my ($myPack, $callpack, $name, $value, $or_ignore) = @_;
+
+  my $my_sym = _globref($callpack, $name);
+  if (*{$my_sym}{CODE}) {
+    return if $or_ignore;
+    croak "constant ${callpack}::$name is already defined";
+  }
+
+  *$my_sym = sub () {$value};
+}
+
 sub extend {
   (my MY $self, my ($pack, @fields)) = @_;
 
@@ -69,47 +129,6 @@ sub extend {
   $pack;
 }
 
-sub import {
-  $_[0]->dispatch_import(scalar caller, \@_);
-  require Exporter;
-  goto &Exporter::import;
-}
-
-sub dispatch_import {
-  my ($myPack, $callpack, $args) = @_;
-
-  #
-  # To allow falling back to Exporter::import,
-  # We need to keep original $_[0] in $args.
-  # That's why we scan $args->[1]
-  #
-  while (@$args >= 2
-	 and (ref $args->[1] or $args->[1] =~ /^-/)) {
-    my $argSpec = splice @$args, 1, 1;
-    my ($pragma, @args) = do {
-      if (ref $argSpec) {
-	@$argSpec
-      } else {
-	$argSpec =~ s/^-//;
-	$argSpec;
-      }
-    };
-    my $method = "_import_$pragma";
-    $myPack->$method($callpack, @args);
-  }
-}
-
-sub _import_as_base {
-  my ($myPack, $callpack, @fields) = @_;
-
-  $myPack->extend($callpack, @fields);
-
-  my $my_sym = _globref($callpack, 'MY');
-  *$my_sym = sub () {$callpack} unless *{$my_sym}{CODE};
-
-}
-
-
 sub _fields_hash {
   my $sym = _fields_symbol(@_);
   unless (*{$sym}{HASH}) {
@@ -130,3 +149,6 @@ sub _globref {
 }
 
 1;
+
+__END__
+

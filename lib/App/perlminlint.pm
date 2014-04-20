@@ -22,34 +22,46 @@ sub run {
 
   my MY $app = $pack->new($pack->parse_argv($argv));
 
-  print $app->lint(@$argv);
+  my @res = $app->lint(@$argv);
+  if (@res) {
+    print join("\n", @res), "\n" unless @res == 1 and ($res[0] // '') eq '';
+  } else {
+    print "OK\n";
+  }
 }
-
-sub new {
-  fields::new(shift);
-}
-
-sub parse_argv {}
 
 sub lint {
   (my MY $self, my $fn) = @_;
 
-  $self->call_plugin(handle_test => $fn, $self)
-    or die "No way to test $fn\n";
-
-  return "OK\n";
-}
-
-# XXX: plugin conformity test
-
-sub call_plugin {
-  (my MY $self, my ($method, @args)) = @_;
+  my @fallback;
   foreach my $plugin ($self->plugins) {
-    if (my @res = $self->apply_to($plugin, $method, @args)) {
+
+    if (my $obj = $self->apply_to($plugin, handle_match => $fn)) {
+      #
+      my @res = $obj->handle_test($fn)
+	or next;
+
       return @res;
+
+    } elsif ($plugin->is_generic) {
+
+      push @fallback, $plugin;
     }
   }
-  return;
+
+  unless (@fallback) {
+    die "Don't know how to lint $fn\n";
+  }
+
+  foreach my $plugin (@fallback) {
+
+    my @res = $self->apply_to($plugin, handle_test => $fn)
+	or next;
+
+    return @res;
+  }
+
+  return "";
 }
 
 sub apply_to {
@@ -65,7 +77,7 @@ sub plugins {
   wantarray ? @$plugins : $plugins;
 }
 
-sub system_perl {
+sub run_perl {
   my MY $self = shift;
   system($^X, @_) == 0
     or exit $? >> 8;
@@ -131,5 +143,13 @@ sub parse_shbang {
     or return;
   split " ", $shbang;
 }
+
+# XXX: Real new and options...
+
+sub new {
+  fields::new(shift);
+}
+
+sub parse_argv {}
 
 1; # End of App::perlminlint

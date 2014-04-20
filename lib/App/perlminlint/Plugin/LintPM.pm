@@ -3,23 +3,25 @@ use strict;
 use warnings FATAL => qw/all/;
 use autodie;
 
-use App::perlminlint::Plugin -as_base;
+use App::perlminlint::Plugin -as_base, [priority => 0];
 
-sub priority {0}
-
-sub handle_test {
+sub handle_match {
   my ($plugin, $fn) = @_;
 
   $fn =~ m{\.pm\z}
-    or return;
+    and $plugin;
+}
+
+sub handle_test {
+  my ($plugin, $fn) = @_;
 
   defined (my $modname = $plugin->find_module($fn))
     or die "Can't extract module name from $fn\n";
 
   my @inc_opt = $plugin->app->inc_opt($fn, $modname);
 
-  $plugin->app->system_perl(@inc_opt, -we => "require $modname")
-    and print "Module $modname is OK";
+  $plugin->app->run_perl(@inc_opt, -we => "require $modname")
+    and "Module $modname is OK";
 }
 
 sub find_module {

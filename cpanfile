@@ -3,4 +3,5 @@ use strict;
 
 requires 'Module::Pluggable';
 
-$x;
+test_requires 'Test::Differences';
+
