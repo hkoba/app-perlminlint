@@ -2,15 +2,21 @@ perl-minlint-mode
 ====================
 
 To use `perl-minlint-mode`, please load `subdirs.el` in this directory.
-It will setup `load-path`, `cperl-mode-hook' and `autoload`.
+It will setup `load-path`, `cperl-mode-hook` and `autoload`.
 
 For now, recommended way to install perl-minlint-mode is
 
 ```sh
+#
+# This assumes you have ~/bin in your $PATH
+#
 cd ~/bin
 git clone https://github.com/hkoba/app-perlminlint.git
 ln -s app-perlminlint/script/perlminlint .
 
+#
+# This assumes you use ~/.emacs.d/init.el (rather than ~/.emacs)
+#
 cd ~/.emacs.d
 ln -s ../app-perlminlint/elisp perlminlint
 ```
@@ -19,10 +25,10 @@ Then you can setup perl-minlint-mode by adding `(load "perlminlint/subdirs")`
 to your `~/.emacs.d/init.el`.
 (You may need to add `(add-to-list 'load-path "~/.emacs.d")` before above.)
 
-Alternatively, if you want to load all `subdirs.el` under `~/.emacs.d`,
-try following snippet in init.el:
+Alternatively, if you want to enable all subdirs.el under `~/.emacs.d`,
+try adding following snippet in init.el:
 
-```elisp
+```lisp
 ;;
 ;; Load all "*/subdirs.el" under this-dir.
 ;;
