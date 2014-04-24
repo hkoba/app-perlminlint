@@ -16,16 +16,14 @@
 (defvar perl-minlint-mode-map (make-sparse-keymap))
 (define-key perl-minlint-mode-map [f5] 'perl-minlint-run)
 
+;;;###autoload
 (define-minor-mode perl-minlint-mode
-  "Run perlminlint for curren buffer, by hitting <F5>"
+  "Run perlminlint in after-save-hook."
   :keymap perl-minlint-mode-map
   :lighter "{F5->lint}"
   :global nil
   (let ((hook 'after-save-hook) (fn 'perl-minlint-run)
 	(buf (current-buffer)))
-    ;;
-    ;; XXX: Should I make after-save-hook buffer-local?
-    ;;
     (cond ((and (boundp 'mmm-temp-buffer-name)
 		(equal (buffer-name) mmm-temp-buffer-name))
 	   (message "skipping perl-minlint-mode for %s" buf)
@@ -33,18 +31,22 @@
 	  (perl-minlint-mode
 	   ;;; XXX: check whether we have perl-minlint or not.
 	   (message "enabling perl-minlint-mode for %s" buf)
-	   (add-hook hook fn nil nil))
+	   (add-hook hook fn nil t))
 	  (t
 	   (message "disabling perl-minlint-mode for %s" buf)
-	   (remove-hook hook fn nil)))))
+	   (remove-hook hook fn t)))))
 
-(defun perl-minlint-run ()
-  "run perlminlint for current buffer"
-  (interactive)
+;;;###autoload
+(defun perl-minlint-run (&optional force)
+  "Run perlminlint for current buffer.
+By default, this runs only in perl-minlint-mode.
+To use this in other mode, please give t for optional argument FORCE.
+"
+  (interactive "P")
   (let ((buf (current-buffer)))
-    ;;; XXX: Should care mmm case.
-    (if (member major-mode '(perl-mode cperl-mode))
-	(perl-minlint-run-and-raise buf))))
+    (if (or force perl-minlint-mode)
+	(perl-minlint-run-and-raise buf)
+      (message "Not in perl-minlint-mode, skipped."))))
 
 (defun perl-minlint-run-and-raise (buffer)
   (perl-minlint-plist-bind (file line err rc)

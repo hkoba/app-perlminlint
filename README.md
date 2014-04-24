@@ -21,9 +21,15 @@ Editor Integration
 
 ### Emacs
 
-Load `elisp/perl-minlint.el` and run `M-x perl-minlint-mode`.
-This will add `perl-minlint-run` to `after-save-hook`.
-Also, you can run minlint by hitting `<F5>` too.
+[perl-minlint-mode](./elisp/README.md) is provided.
+In this mode, perlminlint is called automatically whenever you save your script.
+You can run perlminlint manually by hitting `<F5>`.
+If your script has an error, cursor will jump to the position.
+
+### Vim
+
+Not yet completed, but proof of concept code exists.
+
 
 Plugin API
 --------------------
@@ -68,12 +74,7 @@ git clone https://github.com/hkoba/app-perlminlint.git
 ln -s app-perlminlint/script/perlminlint .
 ```
 
-Also, if you have `~/.emacs.d`, you can try this like following:
-
-```sh
-cd ~/.emacs.d
-ln -s ../app-perlminlint/elisp/perl-minlint.el
-```
+* For Emacs, please read [this instruction](./elisp/README.md).
 
 LICENSE
 --------------------
