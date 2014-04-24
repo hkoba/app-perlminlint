@@ -34,18 +34,18 @@ try adding following snippet in init.el:
 ;;
 (let ((add-subdirs
        (lambda (this-dir)
-	 (let (fn err (default-directory this-dir))
-	   (normal-top-level-add-to-load-path (list this-dir)) ;;; fail safe.
-	   (dolist (file (cdr (cdr (directory-files this-dir))))
-	     (setq fn (concat (file-name-as-directory file) "subdirs.el"))
-	     (if (and (file-directory-p file)
-		      (file-exists-p fn))
-		 (condition-case err
-		     (load fn)
-		   (error
-		    (message "Can't load %s: %s" fn err)))
-	       (message "add-subdirs: skipped %s" file)))))))
+         (let (fn err (default-directory this-dir))
+           (normal-top-level-add-to-load-path (list this-dir)) ;;; fail safe.
+           (dolist (file (cdr (cdr (directory-files this-dir))))
+             (setq fn (concat (file-name-as-directory file) "subdirs.el"))
+             (if (and (file-directory-p file)
+                      (file-exists-p fn))
+                 (condition-case err
+                     (load fn)
+                   (error
+                    (message "Can't load %s: %s" fn err)))
+               (message "add-subdirs: skipped %s" file)))))))
   (funcall add-subdirs
-	   (or (and load-file-name (file-name-directory load-file-name))
-	       default-directory)))
+           (or (and load-file-name (file-name-directory load-file-name))
+               default-directory)))
 ```
