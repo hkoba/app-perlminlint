@@ -4,12 +4,18 @@ use warnings FATAL => qw/all/;
 
 use App::perlminlint::Plugin -as_base;
 
-use Module::CPANfile;
+my $has_module_cpanfile;
+BEGIN {
+  local $@;
+  eval {require Module::CPANfile};
+  $has_module_cpanfile = ! $@;
+}
 
 sub handle_match {
   my ($plugin, $fn) = @_;
-  $fn =~ m{\bcpanfile\z}i
-    and $plugin;
+  $has_module_cpanfile
+    and $fn =~ m{\bcpanfile\z}i
+      and $plugin;
 }
 
 sub handle_test {

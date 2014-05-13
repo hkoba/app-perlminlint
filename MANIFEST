@@ -1,7 +1,10 @@
 Build.PL
 Changes
 cpanfile
+elisp/loaddefs.el
 elisp/perl-minlint.el
+elisp/README.md
+elisp/subdirs.el
 lib/App/perlminlint.pm
 lib/App/perlminlint/Object.pm
 lib/App/perlminlint/Plugin.pm
@@ -22,6 +25,6 @@ t/in/2.err
 t/in/3.d/deep/deep/mod.pm
 t/lint.t
 t/manifest.t
-t/pod-coverage.t
 t/pod.t
 t/record-err.zsh
+vim/perl-minlint.vim
