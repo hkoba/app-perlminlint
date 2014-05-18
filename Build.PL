@@ -13,6 +13,7 @@ my $builder = Module::Build->new
    , license => 'perl'
    , requires => $cpanfile->prereqs->{runtime}->{requires}
    , build_requires => $cpanfile->prereqs->{build}->{requires}
+   , configure_requires => { 'Module::Build' => 0.42 }
  );
 
 $builder->create_build_script();
