@@ -1,3 +1,4 @@
+.shipit
 Build.PL
 Changes
 cpanfile
@@ -28,3 +29,5 @@ t/manifest.t
 t/pod.t
 t/record-err.zsh
 vim/perl-minlint.vim
+META.yml
+META.json
