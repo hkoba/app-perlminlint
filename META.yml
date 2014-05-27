@@ -2,9 +2,12 @@
 abstract: 'minimalistic lint for perl'
 author:
   - 'KOBAYASHI, Hiroaki <hkoba@cpan.org>'
-build_requires: {}
+build_requires:
+  Module::Build::Pluggable::CPANfile: 0.05
+  Test::Differences: 0
 configure_requires:
   Module::Build: 0.42
+  Module::Build::Pluggable::CPANfile: 0.05
 dynamic_config: 1
 generated_by: 'Module::Build version 0.4203, CPAN::Meta::Converter version 2.130880'
 license: perl
@@ -15,7 +18,6 @@ name: App-perlminlint
 provides:
   App::perlminlint:
     file: lib/App/perlminlint.pm
-    version: 0.1
   App::perlminlint::Object:
     file: lib/App/perlminlint/Object.pm
   App::perlminlint::Plugin:
@@ -28,6 +30,10 @@ provides:
     file: lib/App/perlminlint/Plugin/LintPM.pm
   App::perlminlint::Plugin::LintT:
     file: lib/App/perlminlint/Plugin/LintT.pm
+recommends:
+  Module::CPANfile: 0
+requires:
+  Module::Pluggable: 0
 resources:
   license: http://dev.perl.org/licenses/
-version: 0.1
+version: 0

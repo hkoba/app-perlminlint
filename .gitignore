@@ -1,4 +1,7 @@
 *.bak
+*.elc
 /Build
+/MYMETA.json
+/MYMETA.yml
 /_build
 cover_db

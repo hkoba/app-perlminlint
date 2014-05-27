@@ -1,6 +1,7 @@
 Revision history for App-perlminlint
 
+0.1_2  2014-05-27
+     - Just switched to Module::Build::Pluggable::CPANfile
+
 0.1    2014-05-18
-        First version.
-
-
+     - First version.

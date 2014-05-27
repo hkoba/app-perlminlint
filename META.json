@@ -14,16 +14,34 @@
    },
    "name" : "App-perlminlint",
    "prereqs" : {
+      "build" : {
+         "requires" : {
+            "Module::Build::Pluggable::CPANfile" : "0.05"
+         }
+      },
       "configure" : {
          "requires" : {
-            "Module::Build" : "0.42"
+            "Module::Build" : "0.42",
+            "Module::Build::Pluggable::CPANfile" : "0.05"
+         }
+      },
+      "runtime" : {
+         "recommends" : {
+            "Module::CPANfile" : "0"
+         },
+         "requires" : {
+            "Module::Pluggable" : "0"
+         }
+      },
+      "test" : {
+         "requires" : {
+            "Test::Differences" : "0"
          }
       }
    },
    "provides" : {
       "App::perlminlint" : {
-         "file" : "lib/App/perlminlint.pm",
-         "version" : "0.1"
+         "file" : "lib/App/perlminlint.pm"
       },
       "App::perlminlint::Object" : {
          "file" : "lib/App/perlminlint/Object.pm"
@@ -50,5 +68,5 @@
          "http://dev.perl.org/licenses/"
       ]
    },
-   "version" : "0.1"
+   "version" : "0"
 }
