@@ -12,20 +12,32 @@ use autodie;
 use App::perlminlint::Object -as_base;
 use fields qw/libs
 	      no_stderr
+	      help
 	      _plugins/;
 
 require File::Basename;
 
 use Module::Pluggable require => 1, sub_name => '_plugins';
 
+sub usage {
+  (my MY $app) = @_;
+  die <<END;
+Usage: @{[$app->basename($0)]} FILES...
+END
+}
+
 sub run {
   my ($pack, $argv) = @_;
 
-  my MY $app = $pack->new($pack->parse_argv($argv));
+  my MY $app = $pack->new($pack->parse_argv($argv, {h => 'help'}));
 
   if ($app->{no_stderr}) {
     close STDERR;
     open STDERR, '>&STDOUT';
+  }
+
+  if ($app->{help} or not @$argv) {
+    $app->usage;
   }
 
   my @res = $app->lint(@$argv);
@@ -153,12 +165,12 @@ sub parse_shbang {
 # XXX: Real new and options...
 
 sub parse_argv {
-  my ($pack, $list) = @_;
+  my ($pack, $list, $alias) = @_;
   my @opts;
   while (@$list
-	 and my ($k, $v) = $list->[0] =~ /^--([-\w]+)(?:=(.*))?/) {
+	 and my ($k, $v) = $list->[0] =~ /^--?([-\w]+)(?:=(.*))?/) {
     $k =~ s/-/_/g;
-    push @opts, $k => ($v // 1);
+    push @opts, ($alias->{$k} // $k) => ($v // 1);
     shift @$list;
   }
   @opts;
