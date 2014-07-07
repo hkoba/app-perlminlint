@@ -9,6 +9,21 @@
 (defcustom perl-minlint-script "perlminlint"
   "Default command to test a Perl script")
 
+(defcustom perl-minlint-script-for-tramp-host-alist ()
+  "Alist of tramp hostname vs perlminlint path.
+
+Use like this:
+
+(eval-after-load \"perl-minlint\"
+  '(progn
+     (add-to-list 'perl-minlint-script-for-tramp-host-alist
+		  '(\"myserver\" . \"/opt/bin/perlminlint\"))))
+")
+
+(make-variable-buffer-local
+ (defvar perl-minlint-is-available nil
+   "(used from modeline)"))
+
 (defvar perl-minlint-re-perl-errors
   " at \\([^ ]*\\) line \\([0-9]+\\)[.,]"
   "Regexp to parse perl error file and line.")
@@ -20,7 +35,8 @@
 (define-minor-mode perl-minlint-mode
   "Run perlminlint in after-save-hook."
   :keymap perl-minlint-mode-map
-  :lighter "{F5->lint}"
+  :lighter (perl-minlint-is-available
+	    "{F5->lint}" "!NO LINT!")
   :global nil
   (let ((hook 'after-save-hook) (fn 'perl-minlint-run)
 	(buf (current-buffer)))
@@ -29,7 +45,11 @@
 	   (message "skipping perl-minlint-mode for %s" buf)
 	   nil)
 	  (perl-minlint-mode
-	   ;;; XXX: check whether we have perl-minlint or not.
+	   (setq perl-minlint-is-available
+		 (perl-minlint-find-executable buf))
+	   (when (not perl-minlint-is-available)
+	     (error "perlminlint: Can't find executable for %s"
+		    perl-minlint-script))
 	   (message "enabling perl-minlint-mode for %s" buf)
 	   (add-hook hook fn nil t))
 	  (t
@@ -138,6 +158,21 @@ To use this in other mode, please give t for optional argument FORCE.
 	   ""))
       "")))
 
+(defun perl-minlint-find-executable (buf)
+  (let ((fn (buffer-file-name buf)))
+    (cond ((perl-minlint-is-tramp fn)
+	   (let* ((vec (tramp-dissect-file-name fn))
+		  (specific (perl-minlint-executable-for-host
+			     (tramp-file-name-host vec))))
+	     (or specific
+		 (tramp-find-executable vec perl-minlint-script
+					(tramp-get-remote-path vec)))))
+	  (t
+	   (executable-find perl-minlint-script)))))
+
+(defun perl-minlint-executable-for-host (host)
+  (let ((found (assoc host perl-minlint-script-for-tramp-host-alist)))
+    (cdr found)))
 
 (defun perl-minlint-is-tramp (fn)
   (and (fboundp 'tramp-tramp-file-p)
