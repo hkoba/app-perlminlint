@@ -91,7 +91,8 @@ To use this in other mode, please give t for optional argument FORCE.
 
 (defun perl-minlint-run-and-parse-lint-result (buffer)
   (perl-minlint-plist-bind (rc err)
-      (perl-minlint-shell-command perl-minlint-script " "
+      (perl-minlint-shell-command (perl-minlint-find-executable buffer)
+				  " "
 				   (perl-minlint-tramp-localname buffer))
     (when rc
       (let (match diag)
