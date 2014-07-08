@@ -1,5 +1,11 @@
 Revision history for App-perlminlint
 
+0.20   2014-07-08
+     - perlminlint now just ignores "-w" "-c" "-wc".
+       This might help existing tools which rely on "perl -wc".
+     - Emacs: perl-minlint-mode now supports tramp.
+     - Emacs: Initial flycheck integration.
+
 0.1_2  2014-05-27
      - Just switched to Module::Build::Pluggable::CPANfile
 

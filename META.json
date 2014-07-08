@@ -41,7 +41,8 @@
    },
    "provides" : {
       "App::perlminlint" : {
-         "file" : "lib/App/perlminlint.pm"
+         "file" : "lib/App/perlminlint.pm",
+         "version" : "0.20"
       },
       "App::perlminlint::Object" : {
          "file" : "lib/App/perlminlint/Object.pm"
@@ -68,5 +69,5 @@
          "http://dev.perl.org/licenses/"
       ]
    },
-   "version" : "0"
+   "version" : "0.20"
 }
