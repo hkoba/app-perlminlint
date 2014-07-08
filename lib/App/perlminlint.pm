@@ -29,7 +29,11 @@ END
 sub run {
   my ($pack, $argv) = @_;
 
-  my MY $app = $pack->new($pack->parse_argv($argv, {h => 'help'}));
+  my MY $app = $pack->new($pack->parse_argv
+			  ($argv, {h => 'help'
+				   # Just to ignore -w -c -wc
+				   , w => '', c => '', wc => ''
+				 }));
 
   if ($app->{no_stderr}) {
     close STDERR;
@@ -170,7 +174,10 @@ sub parse_argv {
   while (@$list
 	 and my ($k, $v) = $list->[0] =~ /^--?([-\w]+)(?:=(.*))?/) {
     $k =~ s/-/_/g;
-    push @opts, ($alias->{$k} // $k) => ($v // 1);
+    my $opt = $alias->{$k} // $k;
+    next if $opt eq ''; # To drop compat-only option.
+    push @opts, $opt => ($v // 1);
+  } continue {
     shift @$list;
   }
   @opts;

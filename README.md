@@ -8,18 +8,35 @@ SYNOPSIS
 
 ```sh
 % perlminlint  myscript.pl
+#  => This tests "perl -wc myscript.pl"
 
 % perlminlint  MyModule.pm
+#  => This tests "perl -MMyModule -we0"
 
-% perlminlint  t/00-load.t
+% perlminlint  MyInnerModule.pm
+#  => This tests "perl -I.. -MMyApp::MyInnerModule -we0"
 
 % perlminlint  cpanfile
+#  => This tests Module::CPANfile->load
+
+% perlminlint -w -c -wc myscript.pl
+# -w, -c and -wc is just ignored for 'perl -wc' compatibility.
 ```
 
 Editor Integration
 --------------------
 
 ### Emacs
+
+#### Flycheck
+
+You may use perlminlint with
+[Flycheck](http://flycheck.readthedocs.org/en/latest/index.html),
+but you need to modify existing handler.
+See [flycheck-perlminlint/](flycheck-perlminlint/README.md)
+
+
+#### (Bundled) perl-minlint-mode
 
 [perl-minlint-mode](./elisp/README.md) is provided.
 In this mode, perlminlint is called automatically whenever you save your script.

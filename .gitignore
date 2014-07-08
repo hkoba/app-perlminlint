@@ -1,5 +1,6 @@
 *.bak
 *.elc
+/.perl-version
 /Build
 /MYMETA.json
 /MYMETA.yml
