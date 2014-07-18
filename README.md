@@ -1,4 +1,4 @@
-App-perlminlint
+perlminlint -- "perl -wc" with automatic "-I"
 ====================
 
 `perlminlint` is a simple wrapper of `perl -wc` with better automatic
