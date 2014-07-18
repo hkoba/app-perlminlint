@@ -16,7 +16,7 @@
    ;;
    (set (make-variable-buffer-local
 	 'flycheck-check-syntax-automatically)
-	'(save mode-enabled))
+	'(save))
 
    ;;
    ;; Same above.

@@ -8,7 +8,7 @@
 
 (let ((fsym 'perl-minlint-mode)
       (target 'cperl-mode-hook)
-      (dir (or (file-name-directory load-file-name)
+      (dir (or (and load-file-name (file-name-directory load-file-name))
 	       default-directory)));; for ^X^E
   (add-to-list 'load-path dir)
   (if (or (not (fboundp fsym))

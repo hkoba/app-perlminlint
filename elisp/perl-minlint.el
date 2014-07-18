@@ -121,6 +121,9 @@ To use this in other mode, please give t for optional argument FORCE.
 	(kill-buffer tmpbuf)))
     `(rc ,rc err ,err)))
 
+;;;;========================================
+;;; Codes for tramp support
+
 (defun perl-minlint-tramp-command-in (curbuf cmd args &optional outbuf errorbuf)
   (let ((command (apply #'concat (perl-minlint-tramp-localname cmd)
 			args)))
@@ -142,23 +145,6 @@ To use this in other mode, please give t for optional argument FORCE.
 	  (tramp-file-name-localname vec))
       fn)))
 
-(defun perl-minlint-tramp-prefix (fn-or-buf)
-  ;;; XXX: duplicate logic! fn-or-buf
-  (let ((fn (cond ((stringp fn-or-buf)
-		   fn-or-buf)
-		  ((bufferp fn-or-buf)
-		   (buffer-file-name fn-or-buf))
-		  (t
-		   (error "Invalid argument %s" fn-or-buf)))))
-    (if (perl-minlint-is-tramp fn)
-	(let ((vec (tramp-dissect-file-name fn)))
-	  (tramp-make-tramp-file-name
-	   (tramp-file-name-method vec)
-	   (tramp-file-name-user vec)
-	   (tramp-file-name-host vec)
-	   ""))
-      "")))
-
 (defun perl-minlint-find-executable (buf)
   (let ((fn (buffer-file-name buf)))
     (cond ((perl-minlint-is-tramp fn)
@@ -178,6 +164,8 @@ To use this in other mode, please give t for optional argument FORCE.
 (defun perl-minlint-is-tramp (fn)
   (and (fboundp 'tramp-tramp-file-p)
        (tramp-tramp-file-p fn)))
+
+;;;;========================================
 
 (defun perl-minlint-match (pattern str &rest key-offset)
   "match PATTERN to STR and extract match-portions specified by KEY-OFFSET."
