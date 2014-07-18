@@ -1,8 +1,8 @@
-perlminlint -- "perl -wc" with automatic "-I"
+perlminlint - smart "perl -wc" wrapper
 ====================
 
 `perlminlint` is a simple wrapper of `perl -wc` with better automatic
-`@INC` settings and plugin supports, 
+`@INC` settings and plugins for specific files like `*.t`, `cpanfile`,
 aimed at easing integration of lint functionality into editors.
 
 SYNOPSIS
