@@ -3,7 +3,17 @@ Flycheck support
 
 After you successfully installed perlminlint, you can also use it
 from [Flycheck](http://flycheck.readthedocs.org/en/latest/index.html)
-in cperl-mode. To do this, you have 2 options:
+in cperl-mode. 
+
+Note: This flycheck support restricts 
+the check events only to `save`, because without having real (saved) file
+many perl checking doesn't work properly.
+
+
+Installation
+--------------------
+
+To use perlminlint from flycheck, you have 2 options:
 
 * Just copy contents of [subdirs.el] into your `~/.emacs.d/init.el`
 * Alternatively, you can put a symlink of this `flycheck-perlminlint`

@@ -1,7 +1,9 @@
 App-perlminlint
 ====================
 
-`perlminlint` is a simple wrapper of `perl -wc`.
+`perlminlint` is a simple wrapper of `perl -wc` with better automatic
+`@INC` settings and plugin supports, 
+aimed at easing integration of lint functionality into editors.
 
 SYNOPSIS
 --------------------
@@ -30,22 +32,29 @@ Editor Integration
 
 #### Flycheck
 
-You may use perlminlint with
+You may be able to use perlminlint with
 [Flycheck](http://flycheck.readthedocs.org/en/latest/index.html),
-but you need to modify existing handler.
-See [flycheck-perlminlint/](flycheck-perlminlint/README.md)
+but you need to modify default perl handler in flycheck.
+This is described in 
+[flycheck-perlminlint/README.md](flycheck-perlminlint/README.md)
 
 
-#### (Bundled) perl-minlint-mode
+#### perl-minlint-mode (Bundled)
 
-[perl-minlint-mode](./elisp/README.md) is provided.
-In this mode, perlminlint is called automatically whenever you save your script.
-You can run perlminlint manually by hitting `<F5>`.
+perlminlint is distributed with [perl-minlint-mode](./elisp/README.md).
+In this mode, perlminlint is called automatically whenever you save 
+your perl script.
+Also you can run perlminlint manually by hitting `<F5>`.
 If your script has an error, cursor will jump to the position.
+perl-minlint-mode supports 
+[tramp mode](http://www.emacswiki.org/emacs/TrampMode), so
+you can safely lint remote files too 
+if you installed perlminlint to remote host.
 
 ### Vim
 
 Not yet completed, but proof of concept code exists.
+See [vim/perl-minlint.vim](vim/perl-minlint.vim).
 
 
 Plugin API
@@ -78,12 +87,20 @@ sub handle_test {
 1;
 ```
 
-
 INSTALLATION
 --------------------
 
-Not yet released to CPAN. 
-If you have `~/bin` in your PATH, you can use this like following:
+perlminlint is now on CPAN (as App::perlminlint), so you can install it
+like other modules:
+
+```sh
+$ cpanm App::perlminlint
+```
+
+Alternatively, you can just clone from git repository
+and make a symlink to it.
+For example, if you have `~/bin` in your PATH, you can 
+install perlminlint like following:
 
 ```sh
 cd ~/bin
