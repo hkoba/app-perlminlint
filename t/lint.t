@@ -40,7 +40,7 @@ my $inputdir = $bindir . "in";
   my $test = "$inputdir/3";
   my $fn   = "$test.d/deep/deep/mod.pm";
   chdir "$test.d/deep/deep" or die "Can't chdir! $!";
-  my $out  = qx($^X $script $fn 2>&1 1>&/dev/null);
+  my $out  = qx($^X $script $fn 2>&1 1>/dev/null);
   is_deeply [$out, $?], ['', 0], $fn;
 }
 
