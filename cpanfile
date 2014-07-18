@@ -3,6 +3,8 @@ use strict;
 
 requires 'Module::Pluggable' => 0;
 
+requires 'autodie' => 0;
+
 recommends 'Module::CPANfile' => 0;
 
 test_requires 'Test::Differences' => 0;
