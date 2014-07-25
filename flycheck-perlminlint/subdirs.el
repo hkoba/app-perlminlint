@@ -6,24 +6,29 @@
  'cperl-mode-hook
 
  (lambda ()
-   ;;
-   ;; Enable flycheck
-   ;;
-   (flycheck-mode)
-   
-   ;;
-   ;; perlminlint doesn't work with temporary files.
-   ;;
-   (set (make-variable-buffer-local
-	 'flycheck-check-syntax-automatically)
-	'(save))
+   (require 'flycheck)
+   (let ((when-sym 'flycheck-check-syntax-automatically)
+	 (save-only '(save)))
+     ;;
+     ;; Enable flycheck
+     ;;
+     ;; To prevent checking while buffer initialization.
+     (let ((flycheck-check-syntax-automatically save-only))
+       (flycheck-mode))
+     
+     ;;
+     ;; perlminlint doesn't work with temporary files.
+     ;;
+     (set (make-variable-buffer-local when-sym) save-only)
 
-   ;;
-   ;; Same above.
-   ;;
-   (flycheck-set-checker-properties
-    'perl
-    '((flycheck-command "perlminlint" source-original)))))
+     (message "syntax is checked when: %s" (eval when-sym))
+
+     ;;
+     ;; Same above.
+     ;;
+     (flycheck-set-checker-properties
+      'perl
+      '((flycheck-command "perlminlint" source-original)))))
 
   ;; (message "cperl-mode-hook is: %s" cperl-mode-hook)
 )
