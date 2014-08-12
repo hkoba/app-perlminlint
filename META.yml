@@ -18,7 +18,7 @@ name: App-perlminlint
 provides:
   App::perlminlint:
     file: lib/App/perlminlint.pm
-    version: '0.20'
+    version: '0.21'
   App::perlminlint::Object:
     file: lib/App/perlminlint/Object.pm
   App::perlminlint::Plugin:
@@ -35,6 +35,7 @@ recommends:
   Module::CPANfile: '0'
 requires:
   Module::Pluggable: '0'
+  autodie: '0'
 resources:
   license: http://dev.perl.org/licenses/
-version: '0.20'
+version: '0.21'
