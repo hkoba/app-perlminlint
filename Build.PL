@@ -8,6 +8,8 @@ my $builder = Module::Build::Pluggable->new
    , dist_version_from   => 'lib/App/perlminlint.pm'
    , dist_author           => q{KOBAYASHI, Hiroaki <hkoba@cpan.org>},
    , license => 'perl'
+   , script_files =>
+   +{map(("script/$_" => "bin/$_"), qw/perlminlint/)}
  );
 
 $builder->create_build_script();
