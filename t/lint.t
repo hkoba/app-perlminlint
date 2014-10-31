@@ -63,5 +63,5 @@ sub eq_or_diff_subst {
   foreach ($got, $expect) {
     $_ =~ s{(?<=\n| )\Q$subst\E}{}g;
   }
-  eq_or_diff($got, $expect, $title);
+  like $got, qr/^$expect/, $title;
 }
