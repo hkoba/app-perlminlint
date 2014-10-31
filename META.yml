@@ -9,7 +9,7 @@ configure_requires:
   Module::Build: '0.42'
   Module::Build::Pluggable::CPANfile: '0.05'
 dynamic_config: 1
-generated_by: 'Module::Build version 0.4203, CPAN::Meta::Converter version 2.130880'
+generated_by: 'Module::Build version 0.421, CPAN::Meta::Converter version 2.142690'
 license: perl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
@@ -18,7 +18,7 @@ name: App-perlminlint
 provides:
   App::perlminlint:
     file: lib/App/perlminlint.pm
-    version: '0.21'
+    version: 0.21_1
   App::perlminlint::Object:
     file: lib/App/perlminlint/Object.pm
   App::perlminlint::Plugin:
@@ -38,4 +38,4 @@ requires:
   autodie: '0'
 resources:
   license: http://dev.perl.org/licenses/
-version: '0.21'
+version: 0.21_1
