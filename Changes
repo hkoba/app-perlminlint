@@ -1,5 +1,8 @@
 Revision history for App-perlminlint
 
+0.21_1 2014-10-31
+     - Adapt new error diag from perl-5.21.x (gh#1 RT#99917)
+
 0.21   2014-08-12
      - Now perlminlint is installed to bin/. (><)
 
