@@ -1,4 +1,4 @@
-perlminlint - smart "perl -wc" wrapper
+perlminlint - smart "perl -wc" wrapper[![Build Status](https://travis-ci.org/hkoba/app-perlminlint.svg?branch=master)](https://travis-ci.org/hkoba/app-perlminlint)
 ====================
 
 `perlminlint` is a simple wrapper of `perl -wc` with better automatic
