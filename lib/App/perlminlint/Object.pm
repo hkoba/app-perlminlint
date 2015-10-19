@@ -3,6 +3,7 @@ use strict;
 use warnings FATAL => qw/all/;
 use Carp;
 
+require fields;
 use parent qw/File::Spec/;
 
 our %FIELDS;
@@ -72,7 +73,7 @@ sub dispatch_import {
       }
     };
 
-    if (my $sub = $myPack->can("_import_$pragma")) {
+    if (my $sub = $myPack->can("declare_$pragma")) {
       $sub->($myPack, $callpack, @args);
     } else {
       croak "Unknown pragma '$pragma' in $callpack";
@@ -80,7 +81,7 @@ sub dispatch_import {
   }
 }
 
-sub _import_as_base {
+sub declare_as_base {
   my ($myPack, $callpack, @fields) = @_;
 
   # Special case. -as_base is treated as [as_base => 1];
@@ -88,7 +89,7 @@ sub _import_as_base {
     pop @fields;
   }
 
-  $myPack->extend($callpack, @fields);
+  $myPack->declare_fields($callpack, @fields);
 
   $myPack->_declare_constant_in($callpack, MY => $callpack, 1);
 }
@@ -105,7 +106,7 @@ sub _declare_constant_in {
   *$my_sym = sub () {$value};
 }
 
-sub extend {
+sub declare_fields {
   (my MY $self, my ($pack, @fields)) = @_;
 
   push @{*{_globref($pack, 'ISA')}}, ref($self) || $self;

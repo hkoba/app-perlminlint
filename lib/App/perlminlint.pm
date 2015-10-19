@@ -9,12 +9,13 @@ our $VERSION = '0.21_1';
 use Carp;
 use autodie;
 
-use App::perlminlint::Object -as_base;
-use fields qw/libs
-	      no_stderr
-	      help
-	      _plugins/;
+use App::perlminlint::Object -as_base,
+  [fields => qw/libs
+		no_stderr
+		help
+		_plugins/];
 
+require lib;
 require File::Basename;
 
 use Module::Pluggable require => 1, sub_name => '_plugins';
@@ -44,11 +45,27 @@ sub run {
     $app->usage;
   }
 
+  $app->add_lib_to_inc_for(@$argv);
+
   my @res = $app->lint(@$argv);
   if (@res) {
     print join("\n", @res), "\n" unless @res == 1 and ($res[0] // '') eq '';
   } else {
     print "OK\n";
+  }
+}
+
+sub add_lib_to_inc_for {
+  (my MY $self, my $fn) = @_;
+  my @dirs = $self->splitdir($self->rel2abs($fn));
+  pop @dirs;
+  while (@dirs) {
+    -d (my $libdir = $self->catdir(@dirs, "lib"))
+      or next;
+    import lib $libdir;
+    last;
+  } continue {
+    pop @dirs;
   }
 }
 

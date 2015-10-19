@@ -14,14 +14,14 @@ sub NIMPL {
 }
 
 sub priority { 10 }
-sub _import_priority {
+sub declare_priority {
   my ($myPack, $callpack, $value) = @_;
 
   $myPack->_declare_constant_in($callpack, priority => $value);
 }
 
 sub is_generic { 0 }
-sub _import_is_generic {
+sub declare_is_generic {
   my ($myPack, $callpack, $value) = @_;
 
   $myPack->_declare_constant_in($callpack, is_generic => $value);
