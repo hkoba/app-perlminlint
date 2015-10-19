@@ -22,7 +22,7 @@ SYNOPSIS
 #  => This tests Module::CPANfile->load
 
 % perlminlint -w -c -wc myscript.pl
-# -w, -c and -wc is just ignored for 'perl -wc' compatibility.
+# -w, -c and -wc are just ignored for 'perl -wc' compatibility.
 ```
 
 Editor Integration
@@ -34,7 +34,7 @@ Editor Integration
 
 You may be able to use perlminlint with
 [Flycheck](http://flycheck.readthedocs.org/en/latest/index.html),
-but you need to modify default perl handler in flycheck.
+but you must modify default perl handler in flycheck.
 This is described in 
 [flycheck-perlminlint/README.md](flycheck-perlminlint/README.md)
 
@@ -46,10 +46,11 @@ In this mode, perlminlint is called automatically whenever you save
 your perl script.
 Also you can run perlminlint manually by hitting `<F5>`.
 If your script has an error, cursor will jump to the position.
+
 perl-minlint-mode supports 
 [tramp mode](http://www.emacswiki.org/emacs/TrampMode), so
 you can safely lint remote files too 
-if you installed perlminlint to remote host.
+if you install perlminlint on your remote hosts.
 
 ### Vim
 
@@ -60,7 +61,8 @@ See [vim/perl-minlint.vim](vim/perl-minlint.vim).
 Plugin API
 --------------------
 
-You can add plugins like followings:
+You can add your own plugins to your `bin/../lib/App/perlminlint/Plugin`,
+which can be written like following:
 
 ```perl
 package App::perlminlint::Plugin::LintCPANfile;
@@ -86,6 +88,14 @@ sub handle_test {
 
 1;
 ```
+
+### Plugin search order.
+
+* `perlminlint.lib`
+* `dirname(perlminlin)/lib`
+* `$FindBin::Bin/../lib`
+* `$FindBin::RealBin/../lib`
+* Then ordinally `@INC`.
 
 INSTALLATION
 --------------------
