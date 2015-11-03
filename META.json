@@ -62,6 +62,9 @@
       },
       "App::perlminlint::Plugin::LintT" : {
          "file" : "lib/App/perlminlint/Plugin/LintT.pm"
+      },
+      "App::perlminlint::Plugin::LintYATTRC" : {
+         "file" : "lib/App/perlminlint/Plugin/LintYATTRC.pm"
       }
    },
    "release_status" : "stable",

@@ -31,6 +31,8 @@ provides:
     file: lib/App/perlminlint/Plugin/LintPM.pm
   App::perlminlint::Plugin::LintT:
     file: lib/App/perlminlint/Plugin/LintT.pm
+  App::perlminlint::Plugin::LintYATTRC:
+    file: lib/App/perlminlint/Plugin/LintYATTRC.pm
 recommends:
   Module::CPANfile: '0'
 requires:
