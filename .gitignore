@@ -5,4 +5,5 @@
 /MYMETA.json
 /MYMETA.yml
 /_build
+/blib
 cover_db
