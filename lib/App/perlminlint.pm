@@ -15,6 +15,7 @@ use App::perlminlint::Object -as_base,
 		verbose
 		dryrun
 		_plugins
+		_lib_list _lib_dict
 	       /];
 
 require lib;
@@ -59,6 +60,13 @@ sub run {
   }
 }
 
+sub after_new {
+  (my MY $self) = @_;
+  foreach my $lib (@INC) {
+    $self->{_lib_dict}{$lib}++;
+  }
+}
+
 sub add_lib_to_inc_for {
   (my MY $self, my $fn) = @_;
   my @dirs = $self->splitdir($self->rel2abs($fn));
@@ -66,7 +74,10 @@ sub add_lib_to_inc_for {
   while (@dirs) {
     -d (my $libdir = $self->catdir(@dirs, "lib"))
       or next;
-    import lib $libdir;
+    if (not $self->{_lib_dict}{$libdir}) {
+      import lib $libdir;
+      push @{$self->{_lib_list}}, $libdir;
+    }
     last;
   } continue {
     pop @dirs;
@@ -123,6 +134,7 @@ sub plugins {
 sub run_perl {
   my MY $self = shift;
   my @opts;
+  push @opts, map {"-I$_"} lexpand($self->{_lib_list});
   if ($self->{verbose} || $self->{dryrun}) {
     print STDERR join(" ", "#", $^X, @opts, @_), "\n";
   }
@@ -153,6 +165,16 @@ sub rootname {
   my $fn = shift;
   $fn =~ s/\.\w+$//;
   join "", $fn, @_;
+}
+
+sub lexpand {
+  if (not defined $_[0]) {
+    wantarray ? () : 0;
+  } elsif (not ref $_[0]) {
+    $_[0]
+  } else {
+    @{$_[0]};
+  }
 }
 
 sub inc_opt {
