@@ -10,10 +10,12 @@ use Carp;
 use autodie;
 
 use App::perlminlint::Object -as_base,
-  [fields => qw/libs
-		no_stderr
+  [fields => qw/no_stderr
 		help
-		_plugins/];
+		verbose
+		dryrun
+		_plugins
+	       /];
 
 require lib;
 require File::Basename;
@@ -34,6 +36,8 @@ sub run {
 			  ($argv, {h => 'help'
 				   # Just to ignore -w -c -wc
 				   , w => '', c => '', wc => ''
+				   , v => 'verbose'
+				   , n => 'dryrun'
 				 }));
 
   if ($app->{no_stderr}) {
@@ -118,7 +122,14 @@ sub plugins {
 
 sub run_perl {
   my MY $self = shift;
-  system($^X, @_) == 0
+  my @opts;
+  if ($self->{verbose} || $self->{dryrun}) {
+    print STDERR join(" ", "#", $^X, @opts, @_), "\n";
+  }
+  if ($self->{dryrun}) {
+    return;
+  }
+  system($^X, @opts, @_) == 0
     or exit $? >> 8;
 }
 
