@@ -16,6 +16,7 @@ use App::perlminlint::Object -as_base,
 		dryrun
 		_plugins
 		_lib_list _lib_dict
+		_perl_opts
 	       /];
 
 require lib;
@@ -40,6 +41,9 @@ sub run {
 				   , v => 'verbose'
 				   , n => 'dryrun'
 				 }));
+
+  # -IDIR, -mmod, -MMod
+  push @{$app->{_perl_opts}}, $app->parse_perl_opts($argv);
 
   if ($app->{no_stderr}) {
     close STDERR;
@@ -134,6 +138,7 @@ sub plugins {
 sub run_perl {
   my MY $self = shift;
   my @opts;
+  push @opts, lexpand($self->{_perl_opts});
   push @opts, map {"-I$_"} lexpand($self->{_lib_list});
   if ($self->{verbose} || $self->{dryrun}) {
     print STDERR join(" ", "#", $^X, @opts, @_), "\n";
@@ -230,6 +235,18 @@ sub parse_argv {
   } continue {
     shift @$list;
   }
+  @opts;
+}
+
+sub parse_perl_opts {
+  (my MY $self, my $list) = @_;
+
+  my @opts;
+  while (@$list and defined $list->[0]
+	 and $list->[0] =~ m{^-[ImMd]}) {
+    push @opts, shift @$list;
+  }
+
   @opts;
 }
 
