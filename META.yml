@@ -18,7 +18,7 @@ name: App-perlminlint
 provides:
   App::perlminlint:
     file: lib/App/perlminlint.pm
-    version: '0.22'
+    version: '0.23'
   App::perlminlint::Object:
     file: lib/App/perlminlint/Object.pm
   App::perlminlint::Plugin:
@@ -35,9 +35,11 @@ provides:
     file: lib/App/perlminlint/Plugin/LintYATTRC.pm
 recommends:
   Module::CPANfile: '0'
+  YAML::Tiny: '0'
 requires:
   Module::Pluggable: '0'
   autodie: '0'
 resources:
   license: http://dev.perl.org/licenses/
-version: '0.22'
+  repository: https://github.com/hkoba/app-perlminlint
+version: '0.23'

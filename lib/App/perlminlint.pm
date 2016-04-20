@@ -4,7 +4,7 @@ use 5.009;
 use strict;
 use warnings FATAL => 'all';
 
-our $VERSION = '0.22';
+our $VERSION = '0.23';
 
 use Carp;
 use autodie;

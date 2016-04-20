@@ -30,6 +30,14 @@ t/in/1.err
 t/in/2.d/ng.pm
 t/in/2.err
 t/in/3.d/deep/deep/mod.pm
+t/in/4.d/foo.pl
+t/in/4.d/lib/Bar.pm
+t/in/4.d/lib/Foo.pm
+t/in/5.d/.perlminlint.yml
+t/in/5.d/foo.pl
+t/in/5.d/lib/Bar.pm
+t/in/5.d/lib/Foo.pm
+t/in/5.err
 t/lint.t
 t/manifest.t
 t/pod.t

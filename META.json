@@ -27,7 +27,8 @@
       },
       "runtime" : {
          "recommends" : {
-            "Module::CPANfile" : "0"
+            "Module::CPANfile" : "0",
+            "YAML::Tiny" : "0"
          },
          "requires" : {
             "Module::Pluggable" : "0",
@@ -43,7 +44,7 @@
    "provides" : {
       "App::perlminlint" : {
          "file" : "lib/App/perlminlint.pm",
-         "version" : "0.22"
+         "version" : "0.23"
       },
       "App::perlminlint::Object" : {
          "file" : "lib/App/perlminlint/Object.pm"
@@ -71,7 +72,10 @@
    "resources" : {
       "license" : [
          "http://dev.perl.org/licenses/"
-      ]
+      ],
+      "repository" : {
+         "url" : "https://github.com/hkoba/app-perlminlint"
+      }
    },
-   "version" : "0.22"
+   "version" : "0.23"
 }
