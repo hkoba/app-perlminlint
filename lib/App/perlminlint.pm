@@ -9,11 +9,16 @@ our $VERSION = '0.22';
 use Carp;
 use autodie;
 
+sub CFGFILE () {'.perlminlint.yml'}
+
 use App::perlminlint::Object -as_base,
   [fields => qw/no_stderr
 		help
 		verbose
 		dryrun
+
+		no_auto_libdir
+
 		_plugins
 		_lib_list _lib_dict
 		_perl_opts
@@ -24,10 +29,22 @@ require File::Basename;
 
 use Module::Pluggable require => 1, sub_name => '_plugins';
 
+
 sub usage {
   (my MY $app) = @_;
   die <<END;
-Usage: @{[$app->basename($0)]} FILES...
+Usage: @{[$app->basename($0)]} [opts..] YOUR_SCRIPT
+
+Options:
+-v --verbose
+-n --dryrun
+-w -c -wc    (just ignored)
+
+Pass-through Options:
+-IDIR
+-Mmodule
+-mmodule
+-dDEBUG
 END
 }
 
@@ -40,21 +57,25 @@ sub run {
 				   , w => '', c => '', wc => ''
 				   , v => 'verbose'
 				   , n => 'dryrun'
-				 }));
+				 }
+			   , qr{^-[ImMd]}, my $perl_opts = []
+			 ));
 
   # -IDIR, -mmod, -MMod
-  push @{$app->{_perl_opts}}, $app->parse_perl_opts($argv);
+  push @{$app->{_perl_opts}}, @$perl_opts;
+
+  if ($app->{help} or not @$argv) {
+    $app->usage;
+  }
+
+  $app->find_and_load_config_from(@$argv);
 
   if ($app->{no_stderr}) {
     close STDERR;
     open STDERR, '>&STDOUT';
   }
 
-  if ($app->{help} or not @$argv) {
-    $app->usage;
-  }
-
-  $app->add_lib_to_inc_for(@$argv);
+  $app->add_lib_to_inc_for(@$argv) if not $app->{no_auto_libdir};
 
   my @res = $app->lint(@$argv);
   if (@res) {
@@ -71,21 +92,60 @@ sub after_new {
   }
 }
 
-sub add_lib_to_inc_for {
-  (my MY $self, my $fn) = @_;
-  my @dirs = $self->splitdir($self->rel2abs($fn));
+sub upward_first_file_from (&@) {
+  my ($code, $lookfor, $startFn) = @_;
+  my @dirs = MY->splitdir(MY->rel2abs($startFn));
   pop @dirs;
+  local $_;
   while (@dirs) {
-    -d (my $libdir = $self->catdir(@dirs, "lib"))
+    -e (my $fn = MY->catdir(@dirs, $lookfor))
       or next;
-    if (not $self->{_lib_dict}{$libdir}) {
-      import lib $libdir;
-      push @{$self->{_lib_list}}, $libdir;
-    }
-    last;
+    $code->($_ = $fn)
+      and last;
   } continue {
     pop @dirs;
   }
+}
+
+sub add_lib_to_inc_for {
+  (my MY $self, my $fn) = @_;
+
+  upward_first_file_from {
+    my ($libdir) = @_;
+    if (-d $libdir) {
+      if (not $self->{_lib_dict}{$libdir}) {
+	import lib $libdir;
+	push @{$self->{_lib_list}}, $libdir;
+      }
+      1;
+    }
+  } lib => $fn;
+}
+
+sub find_and_load_config_from {
+  (my MY $self, my $fn) = @_;
+  upward_first_file_from {
+    $self->load_config($_);
+  } CFGFILE, $fn;
+}
+
+sub load_config {
+  (my MY $self, my $fn) = @_;
+  if ($self->{verbose}) {
+    print STDERR "# loading config: $fn\n";
+  }
+
+  eval {require YAML::Tiny};
+  if ($@) {
+    die "Can't load '$fn'. Please install YAML::Tiny\n";
+  }
+
+  my $yaml = YAML::Tiny->read($fn);
+  if (not $yaml->[0] and ref $yaml->[0] eq 'HASH') {
+    die "Invalid data in $fn. Only HASH is allowed\n";
+  }
+
+  $self->configure($yaml->[0]);
 }
 
 sub lint {
@@ -224,14 +284,19 @@ sub parse_shbang {
 # XXX: Real new and options...
 
 sub parse_argv {
-  my ($pack, $list, $alias) = @_;
+  my ($pack, $list, $alias, $special_re, $special_list) = @_;
   my @opts;
-  while (@$list
-	 and my ($k, $v) = $list->[0] =~ /^--?([-\w]+)(?:=(.*))?/) {
-    $k =~ s/-/_/g;
-    my $opt = $alias->{$k} // $k;
-    next if $opt eq ''; # To drop compat-only option.
-    push @opts, $opt => ($v // 1);
+  while (@$list) {
+    if ($special_re and $list->[0] =~ $special_re) {
+      push @$special_list, $list->[0]
+    } elsif (my ($k, $v) = $list->[0] =~ /^--?(\w[-\w]*)(?:=(.*))?/) {
+      $k =~ s/-/_/g;
+      my $opt = $alias->{$k} // $k;
+      next if $opt eq ''; # To drop compat-only option.
+      push @opts, $opt => ($v // 1);
+    } else {
+      last;
+    }
   } continue {
     shift @$list;
   }
