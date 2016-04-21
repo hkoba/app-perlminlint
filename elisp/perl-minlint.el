@@ -31,7 +31,9 @@ Use like this:
 (defvar perl-minlint-mode-map (make-sparse-keymap))
 (define-key perl-minlint-mode-map [f5] 'perl-minlint-run)
 
-(defvar perl-minlint-alert-face 'fringe "target face to notify alert")
+(defvar perl-minlint-alert-face 'mode-line
+				;; 'fringe
+				"target face to notify alert")
 
 (defvar perl-minlint-alert-color "orange" "default color for alert")
 (make-variable-buffer-local
