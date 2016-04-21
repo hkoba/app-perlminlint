@@ -31,6 +31,14 @@ Use like this:
 (defvar perl-minlint-mode-map (make-sparse-keymap))
 (define-key perl-minlint-mode-map [f5] 'perl-minlint-run)
 
+(defvar perl-minlint-alert-face 'fringe "target face to notify alert")
+
+(defvar perl-minlint-alert-color "orange" "default color for alert")
+(make-variable-buffer-local
+ (defvar perl-minlint-saved-color nil
+   "saved color of fringe"))
+
+
 ;;;###autoload
 (define-minor-mode perl-minlint-mode
   "Run perlminlint in after-save-hook."
@@ -51,6 +59,9 @@ Use like this:
 	     (error "perlminlint: Can't find executable for %s"
 		    perl-minlint-script))
 	   (message "enabling perl-minlint-mode for %s" buf)
+	   (if perl-minlint-alert-face
+	       (setq perl-minlint-saved-color
+		     (face-background perl-minlint-alert-face)))
 	   (add-hook hook fn nil t))
 	  (t
 	   (message "disabling perl-minlint-mode for %s" buf)
@@ -73,6 +84,12 @@ To use this in other mode, please give t for optional argument FORCE.
       (perl-minlint-run-and-parse-lint-result buffer)
     (unless (eq rc 0)
       (beep))
+
+    (if perl-minlint-alert-face
+	(set-face-background perl-minlint-alert-face
+			     (if (eq rc 0) perl-minlint-saved-color
+			       perl-minlint-alert-color)))
+
     (when (and file
 	       (not (equal (expand-file-name file)
 			   (perl-minlint-tramp-localname buffer)))
