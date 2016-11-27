@@ -8,6 +8,8 @@ our $VERSION = '0.23';
 
 use Carp;
 use autodie;
+use Encode qw/is_utf8/;
+use open qw/:utf8 :std/;
 
 sub CFGFILE () {'.perlminlint.yml'}
 
@@ -151,6 +153,10 @@ sub load_config {
 sub lint {
   (my MY $self, my $fn) = @_;
 
+  if ($fn =~ /\P{ASCII}/ and not is_utf8($fn)) {
+    Encode::_utf8_on($fn);
+  }
+
   my @fallback;
   foreach my $plugin ($self->plugins) {
 
@@ -212,7 +218,7 @@ sub run_perl {
 
 sub read_file {
   (my MY $self, my $fn) = @_;
-  open my $fh, '<', $fn;
+  open my $fh, '<:utf8', $fn;
   local $/;
   scalar <$fh>;
 }
