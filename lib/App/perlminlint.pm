@@ -329,10 +329,10 @@ App::perlminlint - minimalistic lint for perl
     #  => This tests "perl -wc myscript.pl"
 
     % perlminlint  MyModule.pm
-    #  => This tests "perl -MMyModule -we0"
+    #  => This tests "perl -we 'require MyModule'"
 
     % perlminlint  MyInnerModule.pm
-    #  => This tests "perl -I.. -MMyApp::MyInnerModule -we0"
+    #  => This tests "perl -I.. -we 'require MyApp::MyInnerModule'"
 
     % perlminlint  cpanfile
     #  => This tests Module::CPANfile->load
@@ -345,7 +345,7 @@ so that to integrate automatic check into editors like Emacs and Vim.
 Because most real-world perl scripts consist of many other modules,
 and to load them correctly, you must give correct search path for perl
 as L<-I$DIR|perlrun/-I> and/or L<-Mlib=$DIR|lib>.
-Also, to test modules, "perl -M$MOD -e0" is better than "perl -wc".
+Also, to test modules, "perl -we 'require THE_MODULE'" is better than "perl -wc".
 
 C<perlminlint> wraps all such details so that you can just run C<perlminlint $yourfile> to test your script.
 
