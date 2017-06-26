@@ -112,13 +112,26 @@ sub upward_first_file_from (&@) {
 sub add_lib_to_inc_for {
   (my MY $self, my $fn) = @_;
 
+  my $adder = sub {
+    my ($libdir) = @_;
+    if (not $self->{_lib_dict}{$libdir}) {
+      import lib $libdir;
+      push @{$self->{_lib_list}}, $libdir;
+    }
+  };
+
   upward_first_file_from {
     my ($libdir) = @_;
     if (-d $libdir) {
-      if (not $self->{_lib_dict}{$libdir}) {
-	import lib $libdir;
-	push @{$self->{_lib_list}}, $libdir;
+      $adder->($libdir);
+
+      # Auto add carton's local/lib/perl5 too.
+      my $carton = $self->catdir($self->dirname($self->rel2abs($libdir))
+                                 , qw(local lib perl5));
+      if (-d $carton) {
+        $adder->($carton);
       }
+
       1;
     }
   } lib => $fn;
