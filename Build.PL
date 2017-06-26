@@ -12,6 +12,7 @@ my $builder = Module::Build::Pluggable->new
    , license => 'perl'
    , meta_merge => +{
      resources => {repository  => $gitrepo},
+     x_static_install => 1,
    }
    , script_files =>
    +{map(("script/$_" => "bin/$_"), qw/perlminlint/)}
