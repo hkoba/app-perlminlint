@@ -21,6 +21,7 @@ use App::perlminlint::Object -as_base,
 
 		no_auto_libdir
                 no_widechar
+                no_force_strict
 
 		_plugins
 		_lib_list _lib_dict
@@ -219,6 +220,7 @@ sub run_perl {
   my MY $self = shift;
   my @opts;
   push @opts, '-C' unless $self->{no_widechar};
+  push @opts, '-Mstrict' unless $self->{no_force_strict};
   push @opts, lexpand($self->{_perl_opts});
   push @opts, map {"-I$_"} lexpand($self->{_lib_list});
   if ($self->{verbose} || $self->{dryrun}) {
