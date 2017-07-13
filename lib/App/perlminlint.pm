@@ -20,6 +20,7 @@ use App::perlminlint::Object -as_base,
 		dryrun
 
 		no_auto_libdir
+                no_widechar
 
 		_plugins
 		_lib_list _lib_dict
@@ -217,6 +218,7 @@ sub plugins {
 sub run_perl {
   my MY $self = shift;
   my @opts;
+  push @opts, '-C' unless $self->{no_widechar};
   push @opts, lexpand($self->{_perl_opts});
   push @opts, map {"-I$_"} lexpand($self->{_lib_list});
   if ($self->{verbose} || $self->{dryrun}) {
