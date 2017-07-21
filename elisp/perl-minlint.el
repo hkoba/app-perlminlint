@@ -144,18 +144,16 @@ To use this in other mode, please give t for optional argument FORCE."
 		    "lint OK")))))
 
 (defun perl-minlint-set-mode-line-alert (err)
-  (cond (err
-         (setq perl-minlint-saved-color-cookie
-               (mapcar (lambda (f)
-                         (face-remap-add-relative f
-                                                  ':background "orange"))
-                       perl-minlint-alert-face)))
-        (t
-         (when perl-minlint-saved-color-cookie
-           (mapc (lambda (ck)
-                     (face-remap-remove-relative ck))
-                   perl-minlint-saved-color-cookie)
-           (setq perl-minlint-saved-color-cookie nil)))))
+  (when perl-minlint-saved-color-cookie
+    (mapc (lambda (ck)
+            (face-remap-remove-relative ck))
+          perl-minlint-saved-color-cookie))
+  (setq perl-minlint-saved-color-cookie
+        (when err
+          (mapcar (lambda (f)
+                    (face-remap-add-relative f
+                                             ':background "orange"))
+                  perl-minlint-alert-face))))
 
 (defun perl-minlint-run-and-parse-lint-result (buffer)
   (perl-minlint-plist-bind (rc err)
