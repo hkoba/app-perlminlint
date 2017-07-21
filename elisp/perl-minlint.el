@@ -146,7 +146,7 @@ To use this in other mode, please give t for optional argument FORCE."
 (defun perl-minlint-set-mode-line-alert (err)
   (cond (err
          (setq perl-minlint-saved-color-cookie
-               (mapc (lambda (f)
+               (mapcar (lambda (f)
                          (face-remap-add-relative f
                                                   ':background "orange"))
                        perl-minlint-alert-face)))
