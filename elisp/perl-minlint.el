@@ -129,8 +129,9 @@ To use this in other mode, please give t for optional argument FORCE."
 	       (not (equal (expand-file-name file)
 			   (perl-minlint-tramp-localname buffer)))
 	       (not (equal file "-")))
-	(message "opening error file: %s" file)
-	(find-file-other-window file))
+      (setq file (concat (perl-minlint-tramp-prefix buffer) file))
+      (message "opening error file: %s" file)
+      (find-file-other-window file))
     (when (and file line)
       (goto-line (string-to-number line)))
     (if perl-minlint-alert-face
@@ -210,6 +211,31 @@ To use this in other mode, please give t for optional argument FORCE."
 	(let ((vec (tramp-dissect-file-name fn)))
 	  (tramp-file-name-localname vec))
       fn)))
+
+(defun perl-minlint-tramp-prefix (fn-or-buf)
+  ;;; XXX: duplicate logic! fn-or-buf
+  (let ((fn (cond ((stringp fn-or-buf)
+		   fn-or-buf)
+		  ((bufferp fn-or-buf)
+		   (buffer-file-name fn-or-buf))
+		  (t
+		   (error "Invalid argument %s" fn-or-buf)))))
+    (if (perl-minlint-is-tramp fn)
+	(let ((vec (tramp-dissect-file-name fn))
+              (version (version-to-list tramp-version)))
+          (if (version-list-< version (version-to-list "2.3.2"))
+              (tramp-make-tramp-file-name
+	       (tramp-file-name-method vec)
+	       (tramp-file-name-user vec)
+	       (tramp-file-name-host vec)
+	       "")
+            (tramp-make-tramp-file-name
+	       (tramp-file-name-method vec)
+	       (tramp-file-name-user vec)
+	       (tramp-file-name-domain vec)
+	       (tramp-file-name-host vec)
+	       (tramp-file-name-port vec)
+	       ""))))))
 
 (defun perl-minlint-find-executable (buf)
   (let ((fn (buffer-file-name buf)))
