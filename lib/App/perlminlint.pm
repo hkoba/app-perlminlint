@@ -9,7 +9,7 @@ our $VERSION = '0.24';
 use Carp;
 use autodie;
 use Encode qw/is_utf8/;
-use open qw/:utf8 :std/;
+use open qw/:std/;
 
 sub CFGFILE () {'.perlminlint.yml'}
 
@@ -234,8 +234,9 @@ sub run_perl {
 }
 
 sub read_file {
-  (my MY $self, my $fn) = @_;
-  open my $fh, '<:utf8', $fn;
+  (my MY $self, my ($fn, $layer)) = @_;
+  $layer //= ':utf8';
+  open my $fh, "<$layer", $fn;
   local $/;
   scalar <$fh>;
 }
@@ -286,7 +287,7 @@ sub read_shbang_opts {
 
   my @opts;
 
-  my $body = $app->read_file($fn);
+  my $body = $app->read_file($fn, '');
 
   my (@shbang) = $app->parse_shbang($body);
 

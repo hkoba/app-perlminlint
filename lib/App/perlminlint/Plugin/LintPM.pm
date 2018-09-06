@@ -28,7 +28,7 @@ sub handle_test {
 sub find_module {
   my ($plugin, $fn) = @_;
 
-  local $_ = $plugin->app->read_file($fn);
+  local $_ = $plugin->app->read_file($fn, '');
 
   while (/(?:^|\n) [\ \t]*     (?# line beginning + space)
 	  package  [\n\ \t]+   (?# newline is allowed here)
