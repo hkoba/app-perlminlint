@@ -106,7 +106,8 @@ is expanded into:
 	   (add-hook hook fn nil t))
 	  (t
 	   (message "disabling perl-minlint-mode for %s" buf)
-	   (remove-hook hook fn t)))))
+	   (remove-hook hook fn t)
+	   (perl-minlint-set-mode-line-alert nil)))))
 
 ;;;###autoload
 (defun perl-minlint-run (&optional force)
