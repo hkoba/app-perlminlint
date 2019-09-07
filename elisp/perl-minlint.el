@@ -139,7 +139,8 @@ To use this in other mode, please give t for optional argument FORCE."
         (perl-minlint-set-mode-line-alert (not (eq rc 0))))
     (message "%s"
 	     (cond ((> (length err) 0)
-		    err)
+		    (concat (unless (eq rc 0) "perlminlint found an error: ")
+                            err))
 		   ((not (eq rc 0))
 		    "Unknown error")
 		   (t
