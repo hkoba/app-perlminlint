@@ -8,6 +8,7 @@ requires 'autodie' => 0;
 recommends 'Module::CPANfile' => 0;
 
 recommends 'YAML::Tiny';
+test_requires 'YAML::Tiny';
 
 test_requires 'Test::Differences' => 0;
 

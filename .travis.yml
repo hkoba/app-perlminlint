@@ -18,6 +18,6 @@ script:
   - |
     docker run --init -it -v $PWD:/$TRAVIS_REPO_SLUG -w /$TRAVIS_REPO_SLUG $image bash -c '
     set -euxo pipefail
-    cpanm --notest --quiet --installdeps --with-recommends .
+    cpanm --notest --quiet --installdeps .
     prove -lr t
     '
