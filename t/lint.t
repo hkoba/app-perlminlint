@@ -91,6 +91,39 @@ my $inputdir = $bindir . "in";
   }
 }
 
+{
+  my $test = "$inputdir/6";
+  my $fn   = "$test.d/lib/Foo.pm";
+  my $out  = qx(cd $test.d/; $^X $script $fn 2>&1);
+  is_deeply [$out, $?], ["Module Foo is OK\n", 0], $fn;
+}
+
+{
+  my $test = "$inputdir/6";
+  my $fn   = "$test.d/lib/Foo.pm";
+  my $out  = qx(cd $test.d/; $^X $script --no_force_warnings=0 $fn 2>&1);
+  like $out, qr{^False \[\] range}, "--no_force_warnings=0 $fn";
+}
+
+{
+  my $test = "$inputdir/6";
+  my $fn   = "$test.d/foo.pl";
+  my $want = "$fn syntax OK\n";
+  my $out  = qx($^X $script $fn 2>&1 1>/dev/null);
+  if (defined $out and not $?) {
+    eq_or_diff_subst($bindir, $out, $want, $fn);
+  } else {
+    fail $fn;
+  }
+}
+
+{
+  my $test = "$inputdir/6";
+  my $fn   = "$test.d/foo.pl";
+  my $out  = qx(cd $test.d/; $^X $script --no_force_warnings=0 $fn 2>&1);
+  like $out, qr{^False \[\] range}, "--no_force_warnings=0 $fn";
+}
+
 done_testing();
 
 sub rootname {
