@@ -56,15 +56,17 @@ END
 sub run {
   my ($pack, $argv) = @_;
 
-  my MY $app = $pack->new($pack->parse_argv
-			  ($argv, {h => 'help'
-				   # Just to ignore -w -c -wc
-				   , w => '', c => '', wc => ''
-				   , v => 'verbose'
-				   , n => 'dryrun'
-				 }
-			   , qr{^-[ImMd]}, my $perl_opts = []
-			 ));
+  my @opts = $pack->parse_argv(
+    $argv, {h => 'help'
+            # Just to ignore -w -c -wc
+            , w => '', c => '', wc => ''
+            , v => 'verbose'
+            , n => 'dryrun'
+          }
+    , qr{^-[ImMd]}, my $perl_opts = []
+  );
+
+  my MY $app = $pack->new(@opts);
 
   # -IDIR, -mmod, -MMod
   push @{$app->{_perl_opts}}, @$perl_opts;
@@ -74,6 +76,9 @@ sub run {
   }
 
   $app->find_and_load_config_from(@$argv);
+
+  # Allow overriding .perlminlint.yml by commandline
+  $app->configure(@opts);
 
   if ($app->{no_stderr}) {
     close STDERR;
