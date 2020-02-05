@@ -6,6 +6,9 @@ use warnings FATAL => 'all';
 use Carp;
 
 use App::perlminlint::Object [as_base => qw/^app/];
+our @EXPORT_OK = qw/APP/;
+
+sub APP () {'App::perlminlint'}
 
 sub NIMPL {
   my ($pkg, $file, $line, $subname) = caller($_[0] // 1);

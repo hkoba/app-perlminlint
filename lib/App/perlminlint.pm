@@ -22,6 +22,7 @@ use App::perlminlint::Object -as_base,
 		no_auto_libdir
                 no_widechar
                 no_force_strict
+                no_force_warnings
 
 		_plugins
 		_lib_list _lib_dict
