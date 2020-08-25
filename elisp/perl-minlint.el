@@ -8,7 +8,7 @@
 ;;; Code:
 
 (eval-when-compile
-  (require 'cl))
+  (require 'cl-lib))
 
 (defgroup perl-minlint nil
   "Minor mode to run perlminlint from after-save-hook"
@@ -70,12 +70,13 @@ is expanded into:
 
   ;; This code is heavily borrowed from cl-macs.el:multiple-value-bind
   (let ((temp (make-symbol "--perl-minlint-plist-bind-var--")))
-    (list* 'let* (cons (list temp form)
-		       (mapcar (function
-				(lambda (v)
-				  (list v (list 'plist-get temp `(quote ,v)))))
-			       vars))
-	   body)))
+    (cl-list* 'let*
+              (cons (list temp form)
+		    (mapcar (function
+			     (lambda (v)
+			       (list v (list 'plist-get temp `(quote ,v)))))
+			    vars))
+	      body)))
 
 (unless (get 'perl-minlint-plist-bind 'edebug-form-spec)
   (put 'perl-minlint-plist-bind 'edebug-form-spec
