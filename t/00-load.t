@@ -1,8 +1,10 @@
-#!perl -T
+#!perl
 use 5.006;
 use strict;
 use warnings FATAL => 'all';
 use Test::More;
+use FindBin;
+use lib "$FindBin::Bin/../lib";
 
 plan tests => 1;
 
