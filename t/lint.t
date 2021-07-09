@@ -47,7 +47,7 @@ my $inputdir = $bindir . "in";
   my $test = "$inputdir/4";
   my $fn   = "$test.d/foo.pl";
   my $want = "$fn syntax OK\n";
-  my $out  = qx($^X $script $fn 2>&1 1>/dev/null);
+  my $out  = qx($^X $script $fn 2>&1);
   if (defined $out and not $?) {
     eq_or_diff_subst($bindir, $out, $want, $fn);
   } else {
@@ -109,7 +109,7 @@ my $inputdir = $bindir . "in";
   my $test = "$inputdir/6";
   my $fn   = "$test.d/foo.pl";
   my $want = "$fn syntax OK\n";
-  my $out  = qx($^X $script $fn 2>&1 1>/dev/null);
+  my $out  = qx($^X $script $fn 2>&1);
   if (defined $out and not $?) {
     eq_or_diff_subst($bindir, $out, $want, $fn);
   } else {
