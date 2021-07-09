@@ -117,6 +117,24 @@ sub upward_first_file_from (&@) {
   }
 }
 
+sub upward_find_all_file_from (&@) {
+  my ($code, $startFn, $lookfor) = @_;
+  my @dirs = MY->splitdir(MY->rel2abs($startFn));
+  pop @dirs;
+  local $_;
+  my @result;
+  while (@dirs) {
+    -e (my $fn = MY->catdir(@dirs, $lookfor))
+      or next;
+    if (my $result = $code->($_ = $fn, MY->catdir(@dirs))) {
+      push @result, $result
+    }
+  } continue {
+    pop @dirs;
+  }
+  @result;
+}
+
 sub add_lib_to_inc_for {
   (my MY $self, my $fn) = @_;
 
@@ -143,6 +161,14 @@ sub add_lib_to_inc_for {
       1;
     }
   } $fn, 'lib';
+
+  upward_find_all_file_from {
+    my ($cpanfile, $dir) = @_;
+    my $libdir = "$dir/lib";
+    if (-d $libdir) {
+        $adder->($libdir);
+    }
+  } $fn, 'cpanfile';
 }
 
 sub find_and_load_config_from {
