@@ -103,7 +103,7 @@ sub after_new {
 }
 
 sub upward_first_file_from (&@) {
-  my ($code, $lookfor, $startFn) = @_;
+  my ($code, $startFn, $lookfor) = @_;
   my @dirs = MY->splitdir(MY->rel2abs($startFn));
   pop @dirs;
   local $_;
@@ -142,14 +142,14 @@ sub add_lib_to_inc_for {
 
       1;
     }
-  } lib => $fn;
+  } $fn, 'lib';
 }
 
 sub find_and_load_config_from {
   (my MY $self, my $fn) = @_;
   upward_first_file_from {
     $self->load_config($_);
-  } CFGFILE, $fn;
+  } $fn, CFGFILE;
 }
 
 sub load_config {
