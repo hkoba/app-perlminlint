@@ -123,7 +123,7 @@ sub add_lib_to_inc_for {
   my $adder = sub {
     my ($libdir) = @_;
     if (not $self->{_lib_dict}{$libdir}) {
-      import lib $libdir;
+      lib->import($libdir);
       push @{$self->{_lib_list}}, $libdir;
     }
   };
