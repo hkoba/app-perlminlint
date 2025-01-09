@@ -15,6 +15,7 @@ function! HighlightPerlLintErrors()
 
     let l:regex = '\vline\s(\d+),'  " 行番号を取得する正規表現
     let l:highlighted = 0
+    let l:first_error_line = ''
 
     " 出力を行ごとに分解して処理
     let l:lines = split(l:output, "\n")
@@ -26,10 +27,12 @@ function! HighlightPerlLintErrors()
             " 正しい形式の正規表現を構築
             if l:line_number != ''
                 let l:pattern = '\%' . l:line_number . 'l.*'
+                let l:first_error_line = l:line_number
 
                 " エラー行をハイライト
                 call matchadd('ErrorMsg', l:pattern)
                 let l:highlighted = 1
+                execute l:first_error_line
             endif
         endif
     endfor
