@@ -4,9 +4,9 @@
 " Copyright (c) 2014 KOBAYASHI, Hiroaki
 " License: Modified BSD License
 
-autocmd BufWritePost *.pl,*.pm call HighlightPerlLintErrors()
+autocmd BufWritePost *.pl,*.pm call HighlightPerlMinlintErrors()
 
-function! HighlightPerlLintErrors()
+function! HighlightPerlMinlintErrors()
     " 実行中のファイルをperlminlintでチェック
     let l:output = system('perlminlint ' . shellescape(expand('%')))
 
