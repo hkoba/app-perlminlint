@@ -37,7 +37,7 @@ sub find_module {
   local $_ = $plugin->app->read_file($fn, '');
 
   while (/(?:^|\n) [\ \t]*     (?# line beginning + space)
-	  package  [\n\ \t]+   (?# newline is allowed here)
+	  (?:package|class)  [\n\ \t]+   (?# newline is allowed here)
 	  ([\w:]+)             (?# module name)
 	  \s* [;\{]            (?# statement or block)
 	 /xsg) {

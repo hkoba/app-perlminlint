@@ -132,6 +132,21 @@ my $inputdir = $bindir . "in";
   is_deeply [$out, $?], ["Module Foo is OK\n", 0], $fn;
 }
 
+{
+  my $test = "$inputdir/8";
+  my $fn   = "$test.d/lib/Foo.pm";
+  my $want = "$fn syntax OK\n";
+  my $out  = qx($^X $script $fn 2>&1);
+  is_deeply [$out, $?], ["Module Foo is OK\n", 0], $fn;
+}
+
+{
+  my $test = "$inputdir/8";
+  my $fn   = "$test.d/lib/Foo/Bar.pm";
+  my $want = "$fn syntax OK\n";
+  my $out  = qx($^X $script $fn 2>&1);
+  is_deeply [$out, $?], ["Module Foo::Bar is OK\n", 0], $fn;
+}
 
 done_testing();
 
