@@ -132,7 +132,8 @@ my $inputdir = $bindir . "in";
   is_deeply [$out, $?], ["Module Foo is OK\n", 0], $fn;
 }
 
-{
+SKIP: {
+  skip "requires v5.38", 1 unless $] >= 5.038;
   my $test = "$inputdir/8";
   my $fn   = "$test.d/lib/Foo.pm";
   my $want = "$fn syntax OK\n";
@@ -140,7 +141,8 @@ my $inputdir = $bindir . "in";
   is_deeply [$out, $?], ["Module Foo is OK\n", 0], $fn;
 }
 
-{
+SKIP: {
+  skip "requires v5.38", 1 unless $] >= 5.038;
   my $test = "$inputdir/8";
   my $fn   = "$test.d/lib/Foo/Bar.pm";
   my $want = "$fn syntax OK\n";
