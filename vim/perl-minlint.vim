@@ -1,7 +1,7 @@
 " perl-minlint - lint everytime you save perl script
-" Version: 0.0.1
-" Author: KOBAYASHI, Hiroaki <hkoba@cpan.org>
-" Copyright (c) 2014 KOBAYASHI, Hiroaki
+" Version: 0.0.2
+" Author: anapple07
+" Copyright (c) 2025 anapple07
 " License: Modified BSD License
 
 autocmd BufWritePost *.pl,*.pm call HighlightPerlMinlintErrors()
