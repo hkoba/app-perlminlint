@@ -155,8 +155,9 @@ To use this in other mode, please give t for optional argument FORCE."
   (setq perl-minlint-saved-color-cookie
         (when err
           (mapcar (lambda (f)
-                    (face-remap-add-relative f
-                                             ':background "orange"))
+                    (face-remap-add-relative
+                     f
+                     ':background perl-minlint-alert-color))
                   perl-minlint-alert-face))))
 
 (defun perl-minlint-run-and-parse-lint-result (buffer)
