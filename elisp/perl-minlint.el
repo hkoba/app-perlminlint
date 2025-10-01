@@ -34,7 +34,7 @@ Use like this:
    "(used from modeline)"))
 
 (defvar perl-minlint-re-perl-errors
-  " at \\([^ ]*\\) line \\([0-9]+\\)[.,]"
+  " at \\([^ ]*\\) line \\([0-9]+\\)[., ]"
   "Regexp to parse perl error file and line.")
 
 (defvar perl-minlint-mode-map (make-sparse-keymap))
